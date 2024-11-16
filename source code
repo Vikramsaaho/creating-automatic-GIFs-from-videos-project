@@ -1,0 +1,74 @@
+from moviepy.editor import VideoFileClip
+
+def video_to_gif(video_path, gif_path, start_time=None, end_time=None, fps=15):
+    try:
+        # Load video
+        clip = VideoFileClip(video_path)
+
+        # Trim video (if start_time and end_time are provided)
+        if start_time and end_time:
+            clip = clip.subclip(start_time, end_time)
+
+        # Resize (optional) and convert to GIF
+        clip = clip.resize(height=320)  # Resize to height 320px (maintain aspect ratio)
+        clip.write_gif(gif_path, fps=fps)
+
+        print(f"GIF created at: {gif_path}")
+    except Exception as e:
+        print(f"Error: {e}")
+
+# Example usage
+video_to_gif("input_video.mp4", "output.gif", start_time=5, end_time=10, fps=10)
+def optimize_gif(gif_path, optimized_gif_path):
+    from PIL import Image
+
+    with Image.open(gif_path) as img:
+        img.save(optimized_gif_path, optimize=True, quality=70)
+
+    print(f"Optimized GIF created at: {optimized_gif_path}")
+
+# Example usage
+optimize_gif("output.gif", "optimized_output.gif")
+import tkinter as tk
+from tkinter import filedialog
+from moviepy.editor import VideoFileClip
+
+def generate_gif():
+    video_path = filedialog.askopenfilename(filetypes=[("Video files", "*.mp4;*.mov;*.avi")])
+    if not video_path:
+        return
+
+    save_path = filedialog.asksaveasfilename(defaultextension=".gif", filetypes=[("GIF files", "*.gif")])
+    if not save_path:
+        return
+
+    try:
+        clip = VideoFileClip(video_path)
+        clip = clip.resize(height=320)  # Resize
+        clip.write_gif(save_path, fps=15)
+        status_label.config(text="GIF created successfully!")
+    except Exception as e:
+        status_label.config(text=f"Error: {e}")
+
+# GUI Setup
+root = tk.Tk()
+root.title("Video to GIF Converter")
+
+select_button = tk.Button(root, text="Select Video and Generate GIF", command=generate_gif)
+select_button.pack(pady=10)
+
+status_label = tk.Label(root, text="")
+status_label.pack()
+
+root.mainloop()
+import os
+
+def batch_video_to_gif(input_folder, output_folder, fps=15):
+    for file in os.listdir(input_folder):
+        if file.endswith(('.mp4', '.mov', '.avi')):
+            input_path = os.path.join(input_folder, file)
+            output_path = os.path.join(output_folder, os.path.splitext(file)[0] + ".gif")
+            video_to_gif(input_path, output_path, fps=fps)
+
+# Example usage
+batch_video_to_gif("videos_folder", "gifs_folder", fps=10)
