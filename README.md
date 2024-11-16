@@ -1,0 +1,1 @@
+# creating-automatic-GIFs-from-videos-project
